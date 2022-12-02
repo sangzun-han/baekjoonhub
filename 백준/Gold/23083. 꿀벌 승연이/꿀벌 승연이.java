@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
     static int N,M,K;
-    static long[][] map = new long[1004][1004]; // 벌집
+    static long[][] map; // 벌집
     static long[][] d; // d[i][j] : i,j까지 갈수있는 경우의 수
     static long max = 1000000007;
     public static void main(String[] args) throws Exception{
@@ -11,7 +11,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-
+        map = new long[N+2][M+2];
         // 모든 첫번째 열이 1이 아닐 수도 있으므로 1,1에서만 1로 초기화 그외에는 모두 계산
         map[1][1] = 1;
 
