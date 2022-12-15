@@ -42,8 +42,6 @@ public class Main {
     private static void bfs(int x, int y) {
 
         Queue<Point> queue = new ArrayDeque<>();
-        boolean[][] visited = new boolean[l][l];
-        visited[x][y] = true;
         queue.offer(new Point(x, y));
         while (!queue.isEmpty()) {
 
