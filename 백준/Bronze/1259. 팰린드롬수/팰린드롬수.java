@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws Exception{
@@ -22,11 +21,7 @@ public class Main {
                     break;
                 }
             }
-            if(c.length%2==0 && cnt==c.length/2) {
-                System.out.println("yes");
-            } else if(c.length%2==1 && cnt==c.length/2){
-                System.out.println("yes");
-            }
+            if(cnt==c.length/2) System.out.println("yes");
         }
     }
 }
