@@ -8,6 +8,7 @@ public class Main {
     static ArrayList<Integer>[] tree;
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st;
         N = Integer.parseInt(br.readLine());
         visited = new boolean[N+1];
@@ -27,8 +28,10 @@ public class Main {
         }
         dfs(1);
         for(int i=2; i<=N; i++) {
-            System.out.println(ans[i]);
+            sb.append(ans[i]).append("\n");
         }
+
+        System.out.println(sb);
     }
 
     private static void dfs(int num) {
