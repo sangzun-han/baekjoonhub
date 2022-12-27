@@ -7,7 +7,7 @@ public class Main {
     static ArrayList<String> d = new ArrayList<>();
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+        StringBuilder sb = new StringBuilder();
         S = br.readLine();
         K = Integer.parseInt(br.readLine());
         d.add("()");
@@ -18,13 +18,13 @@ public class Main {
                 String cur = d.get(j);
 
                 if( (i-2) % cur.length() == 0) {
-                    String s ="";
-                    s += "(";
+                    sb.append("(");
                     for(int k=0; k<(i-2)/cur.length(); k++) {
-                        s+=cur;
+                        sb.append(cur);
                     }
-                    s += ")";
-                    d.add(s);
+                    sb.append(")");
+                    d.add(sb.toString());
+                    sb.setLength(0);
                 }
             }
         }
