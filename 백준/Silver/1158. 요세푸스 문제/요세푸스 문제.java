@@ -1,33 +1,41 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		StringBuilder sb = new StringBuilder();
-		int n = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
-		Queue<Integer> queue = new LinkedList<>();
-		
-		for(int i=1; i<=n; i++) {
-			queue.offer(i);
-		}
-		
-		sb.append("<");
-		
-		for(int i=0; i<n-1; i++) {
-			for(int j=0; j<k-1; j++) {
-				queue.offer(queue.poll());
-			}
-			sb.append(queue.poll()+", ");
-		}
-		
-		sb.append(queue.poll()+">");
-		System.out.println(sb);
-	}
+    public static void main(String[] args) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        Queue<Integer> queue1 = new ArrayDeque<>();
+        Queue<Integer> queue2 = new ArrayDeque<>();
+
+        sb.append("<");
+
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        for(int i=1; i<=N; i++) {
+            queue1.offer(i);
+        }
+
+        while(!queue1.isEmpty()) {
+            for(int i=1; i<K; i++) {
+                int a = queue1.poll();
+                queue1.offer(a);
+            }
+            int b = queue1.poll();
+            queue2.offer(b);
+        }
+
+        while(!queue2.isEmpty()) {
+            sb.append(queue2.poll()+", ");
+        }
+        sb.delete(sb.length()-2, sb.length()-0);
+
+        sb.append(">");
+
+        System.out.println(sb);
+
+
+    }
 }
