@@ -10,7 +10,7 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        HashMap<String, Integer> listen = new HashMap<>();
+        Map<String, Integer> listen = new HashMap<>();
         ArrayList<String> list = new ArrayList<>();
 
         for(int i=0; i<N; i++) {
