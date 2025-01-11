@@ -1,28 +1,23 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[] array) {
-        int[] check= new int[1001];
-        
-        // 값 몇개 나왔는지 체크
-        for(int i=0; i<array.length; i++) {
-            check[array[i]]++;
-        }
-        
-        int max = -1;
-        int index = -1;
-        
-        for(int i=0; i<check.length; i++) {
-            if(check[i] > max) {
-                max = check[i];
-                index = i;
+        int answer =0;
+      int maxCount = 0;
+
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int i : array) {
+            int count = map.getOrDefault(i, 0) + 1;
+            if (count > maxCount) {
+                maxCount = count;
+                answer = i;
+            } else if(count ==maxCount) {
+                answer = -1;
             }
+            map.put(i,count);
         }
-        
-        for(int i=0; i<check.length; i++) {
-            if(max == check[i] && i !=index) {
-                return -1;
-            }
-        }
-        
-        return index;
+
+        return answer;
     }
 }
