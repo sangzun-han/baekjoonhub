@@ -3,43 +3,45 @@ import java.util.*;
 class Solution {
     public int solution(int[] bandage, int health, int[][] attacks) {
         Map<Integer, Integer> map = new HashMap<>();
+
+        int 현재체력 = health;
+        int 시전시간 = bandage[0];
+        int 초당회복량 = bandage[1];
+        int 추가회복량 = bandage[2];
+        int 성공횟수 = 0;
         
-        int answer = 0;
-        int curHealth = health;
-        int castingTime = bandage[0];
-        int perRecovery = bandage[1];
-        int plusRecovery = bandage[2];
-        int successTime = 0;
-            
-        int maxTime = attacks[attacks.length - 1][0];
+        int lastTime = attacks[attacks.length-1][0];
+        
         for(int i=0; i<attacks.length; i++) {
-            int key = attacks[i][0];
-            int value = attacks[i][1];
-            map.put(key,value);
+            int attackTime = attacks[i][0];
+            int damage = attacks[i][1];
+            map.put(attackTime, damage);
         }
         
-
-        for(int time=1; time<=maxTime; time++) {
+        for(int time=1; time<=lastTime; time++) {
+            // 기술 쓰는 도중 몬스터에게 공격당함
+            // 1. 성공횟수 0으로 초기화
+            // 2. 데미지 받음
             if(map.containsKey(time)) {
-                curHealth -= map.get(time);
-                successTime = 0;
+                현재체력 -= map.get(time);
+                성공횟수 = 0;
             } else {
-                curHealth += perRecovery;
-                successTime++;
+                현재체력 += 초당회복량;
+                성공횟수++;
                 
-                if(successTime == castingTime) {
-                    curHealth += plusRecovery;
-                    successTime = 0;
-                }
+                if(성공횟수 == 시전시간) {
+                    현재체력 += 추가회복량;
+                    성공횟수 = 0;
+                } 
                 
-                if(curHealth > health) {
-                    curHealth = health;
+                if(현재체력 >= health) {
+                    현재체력 = health;
                 }
             }
             
-            if(curHealth <= 0) return -1;
+            if(현재체력 <= 0) return -1;
         }
         
-        return curHealth;
+        return 현재체력;
     }
 }
