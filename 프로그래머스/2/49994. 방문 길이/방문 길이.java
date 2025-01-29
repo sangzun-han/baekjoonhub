@@ -2,29 +2,48 @@ import java.util.*;
 
 class Solution {
     public int solution(String dirs) {
-        int[] dx = {0, 0, 1, -1};
-        int[] dy = {-1, 1, 0, 0};
+        int answer = 0;
+        String[] dir = dirs.split("");
         Set<String> set = new HashSet<>();
-        
-        String directions = "UDRL";
         int x = 0;
         int y = 0;
-        for(char dir: dirs.toCharArray()) {
-            int index = directions.indexOf(dir);
-            int nx = x + dx[index];
-            int ny = y + dy[index];
+        
+        int nx = 0;
+        int ny = 0;
+        
+        for(String d: dir) {
+          
+            if(d.equals("U")) {
+                nx = x+1;
+                ny = y;
+            }                
+            else if(d.equals("D")) {
+                nx = x-1;
+                ny = y;
+            }
+            else if(d.equals("R")) {
+                nx = x;
+                ny = y+1;
+            }
+            else if(d.equals("L")) {
+                nx = x;
+                ny = y-1;
+            }
             
             if(nx<-5 || nx>5 || ny<-5 || ny>5) continue;
-            
-            String path = x+" "+y +"->"+nx+" "+ny;
-            String reversePath = nx+" "+ny +"->"+x+" "+y;
+            String path = x+" "+y+ " -> "+nx+" "+ny;
+            String reversePath = nx+" "+ny+ " -> "+x+" "+y;
             set.add(path);
             set.add(reversePath);
             
+            System.out.println(path);
             x = nx;
             y = ny;
         }
-
+        
         return set.size()/2;
     }
 }
+
+// 1. U,D,R,L 4방향 이동
+// 5,5(에서 시작), (5,5), (0,10) (0,0), (10,10)
