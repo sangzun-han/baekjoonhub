@@ -15,11 +15,7 @@ class Solution {
             int 점수 = Integer.parseInt(splitInfo[4]);
             sb.append(언어).append(" ").append(직군).append(" ").append(경력).append(" ").append(소울푸드);
             String key = sb.toString();
-            List<Integer> list = infoMap.get(key);
-            if(list==null) {
-                list = new ArrayList<>();
-                infoMap.put(key, list);
-            }
+            List<Integer> list = infoMap.getOrDefault(key, new ArrayList<>());
             list.add(점수);
             infoMap.put(key, list);
             sb.setLength(0);
