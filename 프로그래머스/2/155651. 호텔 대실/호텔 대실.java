@@ -1,47 +1,44 @@
 import java.util.*;
 
 class Time implements Comparable<Time>{
-    int startTime;
-    int endTime;
+    int time;
+    int type;
     
-    Time(int startTime, int endTime) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    Time(int time, int type) {
+        this.time = time;
+        this.type = type;
     }
     
     @Override
     public int compareTo(Time t) {
-        return this.startTime - t.startTime;
+        if(this.time == t.time) {
+            return this.type - t.type;
+        }
+        return this.time - t.time;
     }
 }
 
 class Solution {
     public int solution(String[][] book_time) {
-        int answer = 0;
         List<Time> roomTimes = new ArrayList<>();
   
         for(int i=0; i<book_time.length; i++) {
             int startTime = convertTime(book_time[i][0]);
             int endTime = convertTime(book_time[i][1]) + 10;
-            roomTimes.add(new Time(startTime, endTime));
+            roomTimes.add(new Time(startTime, 1));
+            roomTimes.add(new Time(endTime, -1));
         }
         Collections.sort(roomTimes);
         
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int currentRooms = 0;
+        int maxRooms = 0;
         
-        for(Time t: roomTimes) {
-            int start = t.startTime;
-            int end = t.endTime;
-            
-            // 재사용
-            if(!pq.isEmpty() && pq.peek() <= start) {
-                pq.poll();
-            }
-            
-            pq.offer(end);
+        for(Time time: roomTimes) {
+            currentRooms += time.type;
+            maxRooms = Math.max(maxRooms, currentRooms);
         }
-       
-        return pq.size();
+        
+        return maxRooms;
     }
     
     public int convertTime(String time) {
