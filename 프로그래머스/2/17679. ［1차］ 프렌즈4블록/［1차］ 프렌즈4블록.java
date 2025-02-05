@@ -38,7 +38,7 @@ class Solution {
         
     }
     
-    public int findBlock() {
+    public void findBlock() {
         for(int i=0; i<M-1; i++) {
             for(int j=0; j<N-1; j++) {
                 if(boards[i][j]==boards[i+1][j] && boards[i][j]==boards[i+1][j+1] && boards[i][j]==boards[i][j+1]) {
@@ -46,7 +46,6 @@ class Solution {
                 }
             }
         }
-        return list.size();
     }
     
     public int breakBlock() {
