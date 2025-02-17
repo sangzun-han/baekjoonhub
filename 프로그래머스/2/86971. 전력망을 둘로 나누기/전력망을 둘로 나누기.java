@@ -3,6 +3,7 @@ import java.util.*;
 class Solution {
     public int solution(int n, int[][] wires) {
         int answer = Integer.MAX_VALUE;
+        
         List<List<Integer>> graph = new ArrayList<>();
         
         for(int i=0; i<=n; i++) {
@@ -10,45 +11,39 @@ class Solution {
         }
         
         for(int[] wire: wires) {
-            int from = wire[0];
-            int to = wire[1];
+            int v1 = wire[0];
+            int v2 = wire[1];
             
-            graph.get(from).add(to);
-            graph.get(to).add(from);
+            graph.get(v1).add(v2);
+            graph.get(v2).add(v1);
         }
         
         for(int[] wire: wires) {
-            int from = wire[0];
-            int to = wire[1];
+            int v1 = wire[0];
+            int v2 = wire[1];
             
-            graph.get(from).remove(Integer.valueOf(to));
-            graph.get(to).remove(Integer.valueOf(from));
+            graph.get(v1).remove(Integer.valueOf(v2));
+            graph.get(v2).remove(Integer.valueOf(v1));
             
-            int network1 = bfs(graph, n, from);
+            int network1 = dfs(graph, n, v1, new boolean[n+1]);
             int network2 = n - network1;
+            
             answer = Math.min(Math.abs(network1 - network2), answer);
             
-            graph.get(from).add(to);
-            graph.get(to).add(from);
+            graph.get(v1).add(v2);
+            graph.get(v2).add(v1);
         }
         
         return answer;
     }
     
-    public int bfs(List<List<Integer>> graph,int n, int startNode) {
-        boolean[] visited = new boolean[n+1];
-        Queue<Integer> queue = new ArrayDeque<>();
-        queue.offer(startNode);
+    public int dfs(List<List<Integer>> graph, int n, int startNode, boolean[] visited) {
         visited[startNode] = true;
         int count = 1;
-        while(!queue.isEmpty()) {
-            int node = queue.poll();
-            for(int adjust: graph.get(node)) {
-                if(!visited[adjust]) {
-                    visited[adjust] = true;
-                    queue.offer(adjust);
-                    count++;
-                }
+        
+        for(int neighbor: graph.get(startNode)) {
+            if(!visited[neighbor]) {
+                count += dfs(graph, n, neighbor, visited);
             }
         }
         
