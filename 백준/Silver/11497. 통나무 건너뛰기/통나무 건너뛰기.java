@@ -5,33 +5,31 @@ public class Main {
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-        StringBuilder sb = new StringBuilder();
         int T = Integer.parseInt(br.readLine());
 
-        for(int tc=0; tc<T; tc++) {
-            int N = Integer.parseInt(br.readLine());
+        for(int t=0; t<T; t++) {
+            int n = Integer.parseInt(br.readLine());
             st = new StringTokenizer(br.readLine());
-            int[] nums = new int[N];
-            for (int i = 0; i < N; i++) {
+
+            int[] nums = new int[n];
+            for(int i=0; i<n; i++) {
                 nums[i] = Integer.parseInt(st.nextToken());
             }
+
             Arrays.sort(nums);
-            int[] sort = new int[N];
             int left = 0;
-            int right = N-1;
-            for(int i=0; i<N; i++) {
-                if(i%2==0)  sort[left++] = nums[i];
-                else sort[right--] = nums[i];
+            int right = n-1;
+            int[] newNums = new int[n];
+            for(int i=0; i<n; i++) {
+                if(i%2==0) newNums[left++] = nums[i];
+                else newNums[right--] = nums[i];
             }
-
             int ans = -1;
-            for(int i=0; i<N-1; i++) {
-                ans = Math.max(ans, Math.abs(sort[i] - sort[i+1]));
+            for(int i=0; i<n-1; i++) {
+                ans = Math.max(ans, Math.abs(newNums[i+1] - newNums[i]));
             }
-            ans = Math.max(ans, Math.abs(sort[0] - sort[N-1]));
-
-            sb.append(ans).append("\n");
+            ans = Math.max(ans, Math.abs(newNums[n-1] - newNums[0]));
+            System.out.println(ans);
         }
-        System.out.println(sb);
     }
 }
