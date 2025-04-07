@@ -1,20 +1,22 @@
 class Solution {
     public int[][] solution(int[][] arr1, int[][] arr2) {
+        int n = arr1.length; // arr1의 행 수
+        int m = arr1[0].length; // arr1의 열 수 = arr2의 행 수
+        int p = arr2[0].length; // arr2의 열 수
 
-        int row1 = arr1.length;
-        int row2 = arr2.length;
-        int col1 = arr1[0].length;
-        int col2 = arr2[0].length;
+        int[][] answer = new int[n][p];
 
-        int[][] answer = new int[row1][col2];
-        
-        for(int i=0; i<row1; i++) {
-            for(int j=0; j<col2; j++) {
-                for(int k=0; k<col1; k++) {
-                    answer[i][j] += arr1[i][k] * arr2[k][j];
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < p; j++) {
+                int sum = 0;
+                for(int k = 0; k < m; k++) {
+                    sum += arr1[i][k] * arr2[k][j];
                 }
+                answer[i][j] = sum;
             }
         }
+
         return answer;
     }
 }
+
