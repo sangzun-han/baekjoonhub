@@ -2,23 +2,23 @@ import java.util.*;
 
 class Solution {
     public int solution(int cacheSize, String[] cities) {
+        if(cacheSize==0) return cities.length * 5;
         int answer = 0;
-        LinkedList<String> cache = new LinkedList<>();
+        Queue<String> queue = new LinkedList<>();
         
         for(int i=0; i<cities.length; i++) {
-            String city = cities[i].toLowerCase();
-            if(cache.contains(city)) {
-                cache.remove(city);
-                cache.add(city);
-                answer += 1;
+            String city = cities[i].toUpperCase();
+            
+            if(queue.contains(city)) {
+                queue.remove(city);
+                queue.offer(city);
+                answer++;
             } else {
-                if(cacheSize <= cache.size() && cache.size() > 0) {
-                    cache.removeFirst();
+                if(queue.size() >= cacheSize) {
+                    queue.remove(queue.poll());   
                 }
-                if(cacheSize > 0) {
-                    cache.add(city);
-                }
-                answer += 5;
+                queue.offer(city);
+                answer+=5;
             }
         }
         return answer;
