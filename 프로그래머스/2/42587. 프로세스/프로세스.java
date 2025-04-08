@@ -1,41 +1,42 @@
 import java.util.*;
 
-class Process {
-    int priority;
+class Point {
     int index;
+    int property;
     
-    Process(int priority, int index) {
-        this.priority = priority;
+    Point(int index, int property) {
         this.index = index;
+        this.property = property;
+        
     }
 }
 
 class Solution {
-    
     public int solution(int[] priorities, int location) {
         int answer = 0;
-        Queue<Process> queue = new LinkedList<>();
+        Queue<Point> queue = new ArrayDeque<>();
+        int size = priorities.length;
         
-        for(int i=0; i<priorities.length; i++) {
-            queue.add(new Process(priorities[i], i));
+        for(int i=0; i<size; i++) {
+            queue.offer(new Point(i, priorities[i]));
         }
         
         while(!queue.isEmpty()) {
-            Process process = queue.poll();
-            boolean isHigher = false;
+            Point current = queue.poll();
             
-            for(Process p: queue) {
-                if(process.priority < p.priority) {
+            boolean isHigher = false;
+            for(Point p: queue) {
+                if(p.property > current.property) {
                     isHigher = true;
                     break;
                 }
             }
             
             if(isHigher) {
-                queue.add(process);    
+                queue.offer(current);
             } else {
                 answer++;
-                if(process.index == location) {
+                if(current.index == location) {
                     return answer;
                 }
             }
