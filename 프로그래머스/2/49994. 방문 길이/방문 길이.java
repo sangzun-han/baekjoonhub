@@ -2,48 +2,60 @@ import java.util.*;
 
 class Solution {
     public int solution(String dirs) {
-        int answer = 0;
-        String[] dir = dirs.split("");
-        Set<String> set = new HashSet<>();
-        int x = 0;
-        int y = 0;
-        
-        int nx = 0;
-        int ny = 0;
-        
-        for(String d: dir) {
-          
-            if(d.equals("U")) {
-                nx = x+1;
-                ny = y;
-            }                
-            else if(d.equals("D")) {
-                nx = x-1;
-                ny = y;
+        StringBuilder sb = new StringBuilder();
+        Set<String> street = new HashSet<>();
+        int n = 10;
+        int m = 10;
+        int currentR = 5;
+        int currentC = 5;
+
+        for(int i=0; i<dirs.length(); i++) {
+            char c = dirs.charAt(i);
+  
+            if(c=='U') {
+                if(currentR+1>=0 && currentR+1<=n) {
+                    String s1 = sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    currentR++;
+                    sb.setLength(0);
+                    String s2 = sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    street.add(s1+s2);
+                    street.add(s2+s1);
+                    sb.setLength(0);
+                }
+            } else if(c=='D') {
+                if(currentR-1>=0 && currentR-1<=n) {
+                    String s1 = sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    currentR--;
+                    sb.setLength(0);
+                    String s2 = sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    street.add(s1+s2);
+                    street.add(s2+s1);
+                    sb.setLength(0);
+                }
+            } else if(c=='R') {
+                if(currentC+1>=0 && currentC+1<=m) {
+                    String s1 = sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    currentC++;
+                    sb.setLength(0);
+                    String s2= sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    street.add(s1+s2);
+                    street.add(s2+s1);
+                    sb.setLength(0);
+                }
+            } else if(c=='L') {
+                if(currentC-1>=0 && currentC-1<=m) {
+                    String s1 = sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    currentC--;
+                    sb.setLength(0);
+                    String s2 = sb.append("(").append(currentR).append(",").append(currentC).append(")").toString();
+                    street.add(s1+s2);
+                    street.add(s2+s1);
+                    sb.setLength(0);
+                }
             }
-            else if(d.equals("R")) {
-                nx = x;
-                ny = y+1;
-            }
-            else if(d.equals("L")) {
-                nx = x;
-                ny = y-1;
-            }
-            
-            if(nx<-5 || nx>5 || ny<-5 || ny>5) continue;
-            String path = x+" "+y+ " -> "+nx+" "+ny;
-            String reversePath = nx+" "+ny+ " -> "+x+" "+y;
-            set.add(path);
-            set.add(reversePath);
-            
-            System.out.println(path);
-            x = nx;
-            y = ny;
         }
         
-        return set.size()/2;
+       
+        return street.size() / 2;
     }
 }
-
-// 1. U,D,R,L 4방향 이동
-// 5,5(에서 시작), (5,5), (0,10) (0,0), (10,10)
