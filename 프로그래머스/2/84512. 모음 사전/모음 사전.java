@@ -1,29 +1,26 @@
-import java.util.*;
-
 class Solution {
-    static List<String> list = new ArrayList<>();
-    static char[] alpha = {'A','E','I','O','U'};
+    static String[] 모음 = {"A", "E", "I", "O", "U"};
+    static int answer;
+    static int count;
     
     public int solution(String word) {
-        recursive("", 0);
-        Collections.sort(list);
-        
-        int index = list.indexOf(word);
-        return index+1;
+        answer = 0;
+        count = 0;
+        dfs("", word);    
+        return answer;
     }
     
-    public void recursive(String cur, int depth) {
-        if(depth > 5) {
+    public void dfs(String current, String target) {
+        if(current.equals(target)) {
+            answer = count;
             return;
         }
         
-        if(!cur.isEmpty()) {
-            list.add(cur);
-        }
+        if(current.length() >= 5) return;
         
-        for(char a: alpha) {
-            recursive(cur+a, depth+1);
+        for(int i=0; i<5; i++) {
+            count++;
+            dfs(current + 모음[i], target);
         }
-        
     }
 }
