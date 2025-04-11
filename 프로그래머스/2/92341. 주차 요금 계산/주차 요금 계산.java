@@ -2,65 +2,75 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] fees, String[] records) {
-        TreeMap<Integer, List<Integer>> carRecord = new TreeMap<>();
-        List<Integer> list = new ArrayList<>();
+        List<Integer> timeList = new ArrayList<>();
+        TreeMap<String, List<Integer>> parkRecord = new TreeMap<>();
+        List<Integer> answerList = new ArrayList<>();
         
-        int primaryTime = fees[0];
-        int primaryPrice = fees[1];
-        int perTime = fees[2];
-        int perPrice = fees[3];
+        int basicTime = fees[0];
+        int basicPrice = fees[1];
+        int unitTime = fees[2];
+        int unitPrice = fees[3];
+        
         
         for(int i=0; i<records.length; i++) {
-            String[] record = records[i].split(" ");
-            int carNumber = Integer.parseInt(record[1]);
-            int time = convertTime(record[0]);
-            
-            List<Integer> timeRecord = carRecord.getOrDefault(carNumber, new ArrayList<>());
-            timeRecord.add(time);
-            carRecord.put(carNumber, timeRecord);
+            String[] s = records[i].split(" ");
+            int time = hourToMinute(s[0]);
+            String number = s[1];
+            List<Integer> list = parkRecord.getOrDefault(number, new ArrayList<>());
+            list.add(time);
+            parkRecord.put(number, list);
         }
         
-        for(int carNumber: carRecord.keySet()) {
-            int totalPrice = 0;
-            int totalTime = 0;
-            List<Integer> times = carRecord.get(carNumber);
-            // 출차가 없다.
-            if(times.size()%2==1) {
-                times.add(convertTime("23:59"));
+        for(String key: parkRecord.keySet()) {
+            List<Integer> times = parkRecord.get(key);
+            int price = 0;
+            int prefixTime = 0;
+            if(times.size()%2 == 1) {
+                times.add(hourToMinute("23:59"));
+            }
+
+            for(int i=0; i<times.size(); i++) {
+                System.out.print(times.get(i)+" ");
             }
             
-            for(int i=0; i<times.size(); i+=2) {
-                int inTime = times.get(i);
-                int outTime = times.get(i+1);
-                totalTime += outTime - inTime;   
+            while(times.size() != 0) {
+                int out = times.get(1);
+                int in = times.get(0);
+                int time = out - in;
+                prefixTime += time;                
+                times.remove(0);
+                times.remove(0);
             }
             
-            totalPrice = primaryPrice;
-            totalTime -= primaryTime;
-            
-            if(totalTime > 0) {
-                if(totalTime % perTime != 0) {
-                    totalPrice += (totalTime / perTime) * perPrice + perPrice;
+             if(prefixTime <= basicTime) {
+                    price += basicPrice;
+                    prefixTime -= basicTime;
                 } else {
-                    totalPrice += (totalTime / perTime) * perPrice;
-                }  
+                    price += basicPrice;
+                    prefixTime -= basicTime;
+                    if(prefixTime % unitTime == 0) {
+                        price += (int)(prefixTime / unitTime) * unitPrice;
+                    } else {
+                        price += (int)(prefixTime / unitTime) * unitPrice;
+                        price += unitPrice;
+                }
             }
-            list.add(totalPrice);
+            answerList.add(price);
         }
         
-        int[] answer = new int[list.size()];
-        for(int i=0; i<list.size(); i++) {
-            answer[i] = list.get(i);
-        }   
-        
+        int[] answer = new int[answerList.size()];
+        for(int i=0; i<answerList.size(); i++) {
+            answer[i] = answerList.get(i);
+        }
         return answer;
     }
     
-    public int convertTime(String time) {
-        String[] timeSplit = time.split(":");
-        int hour = Integer.parseInt(timeSplit[0]);
-        int minute = Integer.parseInt(timeSplit[1]);
+    
+    public int hourToMinute(String time) {
+        String[] s = time.split(":");
+        int hour = Integer.parseInt(s[0]);
+        int minute = Integer.parseInt(s[1]);
         
-        return hour * 60 + minute;
+        return hour*60 + minute;
     }
 }
