@@ -1,65 +1,81 @@
 import java.util.*;
 
-class Word implements Comparable<Word>{
+class Document implements Comparable<Document>{
     String head;
     String number;
     String tail;
     
-    Word(String head, String number, String tail) {
+    Document(String head, String number, String tail) {
         this.head = head;
         this.number = number;
         this.tail = tail;
     }
     
     @Override
-    public int compareTo(Word w) {
-        int headCompare = this.head.compareToIgnoreCase(w.head);
-        if (headCompare != 0) return headCompare;
-
-        return Integer.compare(Integer.parseInt(this.number), Integer.parseInt(w.number));
+    public int compareTo(Document document) {
+        if(this.head.equalsIgnoreCase(document.head)) {
+            return Integer.parseInt(this.number) - Integer.parseInt(document.number);
+        }    
+        return this.head.compareToIgnoreCase(document.head);
+        
     }
 }
 
 class Solution {
-    static List<Word> list = new ArrayList<>();
+    static List<Document> documentList = new ArrayList<>();
     
     public String[] solution(String[] files) {
+        StringBuilder sb = new StringBuilder();
+
         
         for(int i=0; i<files.length; i++) {
-            splitWord(files[i]);
+            String file = files[i];
+            divideFileName(file);
         }
-        String[] answer = new String[list.size()];
-        Collections.sort(list);
         
-        for(int i=0; i<list.size(); i++) {
-            answer[i] = list.get(i).head + list.get(i).number + list.get(i).tail;
+        Collections.sort(documentList);
+        String[] answer = new String[documentList.size()];
+    
+        for(int i=0; i<documentList.size(); i++) {
+            sb.append(documentList.get(i).head)
+                .append(documentList.get(i).number)
+                .append(documentList.get(i).tail);
+            answer[i] = sb.toString();
+            sb.setLength(0);
         }
+        
         return answer;
     }
     
-    public void splitWord(String file) {
-        String HEAD = "";
-        String NUMBER = "";
-        String TAIL = "";
+    public void divideFileName(String file) {
+        int headIndex = 0;
+        int numberIndex = 0;
         
-        int size = file.length();
-        int index = 0;
-     
-        while(index < size && !Character.isDigit(file.charAt(index))) {
-            HEAD += String.valueOf(file.charAt(index));
-            index++;
+        for(int j=0; j<file.length(); j++) {
+            if(Character.isDigit(file.charAt(j))) {
+                headIndex = j;
+                break;
+            }
         }
         
-        while(index < size && Character.isDigit(file.charAt(index))) {
-            NUMBER += String.valueOf(file.charAt(index));
-            index++;
+        String HEAD = file.substring(0,headIndex);
+        
+        for(int j=headIndex; j<file.length(); j++) {
+            if(!Character.isDigit(file.charAt(j))) {
+                numberIndex = j;
+                break;
+            }
         }
         
-        while(index < size) {
-            TAIL += String.valueOf(file.charAt(index));
-            index++;
+        if (numberIndex == 0) {
+            numberIndex = file.length();
         }
         
-        list.add(new Word(HEAD, NUMBER, TAIL));
+        String NUMBER = file.substring(headIndex, numberIndex);
+        String TAIL = file.substring(numberIndex);
+        
+        documentList.add(new Document(HEAD, NUMBER, TAIL));
     }
 }
+
+
