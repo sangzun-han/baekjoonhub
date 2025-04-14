@@ -1,33 +1,32 @@
 class Solution {
+    static int answer;
+    
     public int solution(int storey) {
-        int answer = 0;
-        int carry = 0;
+        answer = 100;
+        dfs(storey, 0);
+        return answer;
+    }
+    
+    public void dfs(int storey, int count) {
+        if(count > answer) return;
         
-        
-        while(storey != 0) {
-            int digit = storey % 10;
-            storey = storey / 10;
-            
-            digit += carry;
-            
-            if(digit < 5) {
-                answer += digit;
-                carry = 0;
-            } else if(digit > 5) {
-                answer += (10 - digit);
-                carry = 1;
-            } else if (digit == 5) {
-                if(storey % 10 >= 5) {
-                    answer += (10 - digit);
-                    carry = 1;
-                } else {
-                    answer += digit;
-                    carry = 0;
-                }
-            }
+        if(storey==0) {
+            answer= Math.min(count,answer);
+            return;
         }
         
-        if(carry > 0) answer += carry;
-        return answer;
+        int remain = storey % 10;
+        
+        // if(remain==0) {
+        //     dfs(storey/10, count);
+        //     return;
+        // }
+        
+        int next1 = storey + (10 - remain);
+        int next2 = storey - remain;
+        
+        dfs(next1/10, count+(10-remain));
+        dfs(next2/10, count+remain);
+        
     }
 }
