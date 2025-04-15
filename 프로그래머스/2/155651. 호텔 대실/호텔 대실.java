@@ -1,48 +1,55 @@
 import java.util.*;
 
-class Time implements Comparable<Time>{
-    int time;
-    int type;
+class Hotel{
+    int startTime;
+    int endTime;
     
-    Time(int time, int type) {
-        this.time = time;
-        this.type = type;
+    Hotel(int startTime, int endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
     
-    @Override
-    public int compareTo(Time t) {
-        if(this.time == t.time) {
-            return this.type - t.type;
-        }
-        return this.time - t.time;
-    }
 }
-
 class Solution {
     public int solution(String[][] book_time) {
-        List<Time> roomTimes = new ArrayList<>();
-  
+        PriorityQueue<Hotel> pq = new PriorityQueue<>((a,b) -> a.startTime - b.startTime);
+        PriorityQueue<Integer> ing = new PriorityQueue<>();
+        int answer = 0;
+        
         for(int i=0; i<book_time.length; i++) {
-            int startTime = convertTime(book_time[i][0]);
-            int endTime = convertTime(book_time[i][1]) + 10;
-            roomTimes.add(new Time(startTime, 1));
-            roomTimes.add(new Time(endTime, -1));
-        }
-        Collections.sort(roomTimes);
-        
-        int currentRooms = 0;
-        int maxRooms = 0;
-        
-        for(Time time: roomTimes) {
-            currentRooms += time.type;
-            maxRooms = Math.max(maxRooms, currentRooms);
+            int start = convertHourFromMinute(book_time[i][0]);
+            int end = convertHourFromMinute(book_time[i][1]);
+            pq.offer(new Hotel(start, end));
         }
         
-        return maxRooms;
+        
+        while(!pq.isEmpty()) {
+            if(ing.isEmpty()) {
+                ing.offer(pq.poll().endTime);
+                answer++;
+            }
+            
+            if(!ing.isEmpty() && !pq.isEmpty() && ing.peek() + 10 <= pq.peek().startTime) {
+                ing.poll();
+                ing.offer(pq.poll().endTime);
+            }
+            
+            if(!ing.isEmpty() && !pq.isEmpty() && ing.peek() + 10 > pq.peek().startTime) {
+                ing.offer(pq.poll().endTime);
+                answer++;
+            }
+            
+            
+        }
+        
+        return answer;
     }
-    
-    public int convertTime(String time) {
-        String[] t = time.split(":");
-        return (Integer.parseInt(t[0]) * 60) + Integer.parseInt(t[1]);
+    public int convertHourFromMinute(String time) {
+        String[] tSplit = time.split(":");
+        int hour = Integer.parseInt(tSplit[0]);
+        int minute = Integer.parseInt(tSplit[1]);
+        
+        return hour * 60 + minute;
     }
 }
+ 
