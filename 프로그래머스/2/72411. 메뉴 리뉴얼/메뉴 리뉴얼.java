@@ -1,57 +1,57 @@
 import java.util.*;
 
 class Solution {
-    
+    static Map<String, Integer> map = new HashMap<>();
+    static List<String> answerList = new ArrayList<>();
+
     public String[] solution(String[] orders, int[] course) {
-        List<String> result = new ArrayList<>();
-        for(int cos: course) {
-            Map<String, Integer> courseMap = new HashMap<>();
-            for(String order: orders) {
-                char[] orderedArr = order.toCharArray();
-                Arrays.sort(orderedArr);
-                String sortedOrderedArr = String.valueOf(orderedArr);
-                
-                comb(sortedOrderedArr, cos, 0, "", courseMap);
+        for(int i=0; i<course.length; i++) {
+            for(int j=0; j<orders.length; j++) {
+                char[] c = orders[j].toCharArray();
+                Arrays.sort(c);
+                comb("", c, course[i], 0);
             }
             
-            
-            // 첫 반복을 돌고나면 가장 많이 나온 조합의 갯수를 하나 찾는다.
-            int count = 0;
-            for(int n: courseMap.values()) {
-                count = Math.max(n,count);
+            int max = 0;
+            for(String key: map.keySet()) {
+                int count = map.get(key);
+                if(count < 2) continue;
+                max = Math.max(max, count);
             }
             
-            if(count < 2) continue;
-            
-            for(String key: courseMap.keySet()) {
-                if(courseMap.get(key)==count) {
-                    result.add(key);
+            for(String key: map.keySet()) {
+                if(map.get(key)==max) {
+                    answerList.add(key);
                 }
             }
-        }
-        Collections.sort(result);
-         String[] answer = new String[result.size()];
         
-        for(int i=0; i<result.size(); i++) {
-            answer[i] = result.get(i);
+            map.clear();
+        }
+        
+        Collections.sort(answerList);
+        String[] answer = new String[answerList.size()];
+        for(int i=0; i<answerList.size(); i++) {
+            answer[i] = answerList.get(i);
         }
         
         return answer;
     }
     
-    
-    public void comb(String order, int count, int index, String current, Map<String,Integer> courseMap) {
-        if(order.length() < count) return;
+    public void comb(String cur, char[] order, int course, int index) {
+        if(order.length < course) return;
         
-        if(count == current.length()) {
-            courseMap.put(current, courseMap.getOrDefault(current,0) + 1);
+        if(cur.length()==course) {
+            map.put(cur, map.getOrDefault(cur, 0) + 1);
             return;
         }
         
-        for(int i=index; i<order.length(); i++) {
-            comb(order, count, i+1, current + order.charAt(i), courseMap);
+        for(int i=index; i<order.length; i++) {
+            comb(cur + order[i], order, course, i+1);
         }
     }
     
-  
+    
 }
+
+// 가장 많이 주문한 메뉴를 코스로 구성한다. 메뉴는 최소 2가지 이상, 2명이상 손님으로부터 주문된 가장많은??
+// orders에서 cours에 나온 숫자만큼 모든 조합을 만든다.  2^10 * 20 * 10
