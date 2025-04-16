@@ -1,68 +1,85 @@
 import java.util.*;
 
+class Point {
+    int r;
+    int c;
+    int count;
+    
+    Point(int r, int c, int count) {
+        this.r = r;
+        this.c = c;
+        this.count = count;
+    }
+}
+
 class Solution {
-    static int startX,startY;
-    static int N,M;
+    static int[] dr = {-1,0,1,0};
+    static int[] dc = {0,1,0,-1};
+    static int n,m;
     static char[][] map;
     static boolean[][] visited;
-    static int[] dx = {-1,0,1,0};
-    static int[] dy = {0,1,0,-1};
     
     public int solution(String[] board) {
         int answer = 0;
-        N = board.length;
-        M = board[0].length();
-        visited = new boolean[N][M];
-        map = new char[N][M];
+        n = board.length;
+        m = board[0].length();
+        map = new char[n][m];
+        visited = new boolean[n][m];
         
-        for(int i=0; i<N; i++) {
-            char[] c = board[i].toCharArray();
-            for(int j=0; j<M; j++) {
-                map[i][j] = c[j];
-                if(map[i][j]=='R') {
-                    startX = i;
-                    startY = j;
-                }
+        for(int i=0; i<n; i++) {
+            map[i] = board[i].toCharArray();
+        }
+    
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
+                if(map[i][j]=='R') answer = bfs(i,j);
             }
-        }    
+        }
         
-        return bfs(startX, startY);
+        return answer;
     }
     
-    public int bfs(int x, int y) {
-        Queue<int[]> queue = new ArrayDeque<>();
-        
-        queue.offer(new int[]{x,y,0});
-        visited[x][y] = true;
+    public int bfs(int r, int c) {
+        Queue<Point> queue = new ArrayDeque<>();
+        visited[r][c] = true;
+        queue.offer(new Point(r,c, 0));
         
         while(!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            int cx = cur[0];
-            int cy = cur[1];
-            int time = cur[2];
+            Point p = queue.poll();
             
-            if(map[cx][cy]=='G') return time;
+            if(map[p.r][p.c]=='G') return p.count;
             
             for(int d=0; d<4; d++) {
-                int nx = cx + dx[d];
-                int ny = cy + dy[d];
+                int nr = p.r;
+                int nc = p.c;
                 
-                while(nx>=0 && nx<N && ny>=0 && ny<M && map[nx][ny] != 'D') {
-                    nx += dx[d];
-                    ny += dy[d];
+                while(nr>=0 && nr<n && nc>=0 && nc<m  && map[nr][nc] != 'D') {
+                    int nextR = nr + dr[d];
+                    int nextC = nc + dc[d];
+                    nr = nextR;
+                    nc = nextC;
                 }
                 
-                // 벽을 만났거나 D까지 와버린상태니 - 해준다.
-                nx -= dx[d];
-                ny -= dy[d];
-                if(visited[nx][ny]) continue;
+                nr -= dr[d];
+                nc -= dc[d];
                 
-                visited[nx][ny] = true;
-                queue.offer(new int[]{nx,ny, time+1});
-                
+                if(!visited[nr][nc]) {
+                    visited[nr][nc] = true;
+                    queue.offer(new Point(nr, nc, p.count+1));     
+                }
             }
-        }   
+        }
+        
         return -1;
     }
-  
+    
+    public void printInfo() {
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
+                System.out.print(visited[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
 }
+
