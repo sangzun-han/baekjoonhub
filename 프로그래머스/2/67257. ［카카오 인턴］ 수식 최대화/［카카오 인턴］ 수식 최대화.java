@@ -1,69 +1,79 @@
 import java.util.*;
 
 class Solution {
-    static char[] operation = {'*','+','-'};
-    static boolean[] selected = new boolean[3];
-    static long answer;
+    static boolean[] visited = new boolean[3];
+    static List<String> op = new ArrayList<>();
+    static long max = -1;
+    
     public long solution(String expression) {
-        answer = 0;
-        perm(expression, 0, new ArrayList<>());    
-        
-        return answer;
+        String[] operators = {"*","+","-"};
+        // 연산자 우선순위 정하기 (6가지)
+        perm(operators, 0, expression);
+        return max;
     }
     
-    public void perm(String expression, int size, List<Character> operationOrder) {
-        if(size==3) {
-            // 우선순위 만들었으니 expression계산
-            answer = Math.max(calc(expression, operationOrder), answer);
+    public void perm(String[] operators, int count, String expression) {
+        if(count==3) {
+            calc(expression);
             return;
         }
         
-        for(int i=0; i<operation.length; i++) {
-            if(!selected[i]) {
-                selected[i] = true;
-                operationOrder.add(operation[i]);
-                perm(expression, size+1, operationOrder);
-                selected[i] = false;
-                operationOrder.remove(operationOrder.size() - 1);
+        for(int i=0; i<operators.length; i++) {
+            if(!visited[i]) {
+                op.add(operators[i]);
+                visited[i] = true;
+                perm(operators, count+1, expression);
+                visited[i] = false;
+                op.remove(op.size() -1);
             }
         }
     }
     
-    public long calc(String expression, List<Character> operationOrder) {
-        List<Character> op = new ArrayList<>();
-        List<Long> number = new ArrayList<>();
+    public long calc(String expression) {
+        List<Long> nums = new ArrayList<>();
+        List<String> ops = new ArrayList<>();
+
         StringBuilder sb = new StringBuilder();
-        
-        for(char exp: expression.toCharArray()) {
-            if(exp=='*' || exp=='+' || exp=='-') {
-                op.add(exp);
-                number.add(Long.parseLong(sb.toString()));
+        for (int i = 0; i < expression.length(); i++) {
+            char ch = expression.charAt(i);
+            if (ch == '+' || ch == '-' || ch == '*') {
+                nums.add(Long.parseLong(sb.toString()));
                 sb.setLength(0);
+                ops.add(String.valueOf(ch));
             } else {
-                sb.append(exp);
+                sb.append(ch);
             }
         }
-        number.add(Long.parseLong(sb.toString()));
-        
-        for(char operator: operationOrder) {
-            for(int i=0; i<op.size(); i++) {
-                if(op.get(i)==operator) {
-                    long prev = number.get(i);
-                    long next = number.get(i+1);
-                    long result = 0;
-                    
-                    if(operator=='*') result = prev * next;
-                    else if (operator=='+') result = prev + next;
-                    else if (operator=='-') result = prev - next;
-                    
-                    number.set(i,result);
-                    number.remove(i+1);
-                    op.remove(i);
-                    i--;
+        nums.add(Long.parseLong(sb.toString()));
+
+        // 우선순위 순서대로 연산 처리
+        for (String currentOp : op) {
+            for (int i = 0; i < ops.size(); ) {
+                if (ops.get(i).equals(currentOp)) {
+                    long a = nums.get(i);
+                    long b = nums.get(i + 1);
+                    long result = operate(a, b, currentOp);
+
+                    nums.remove(i + 1);
+                    nums.set(i, result);
+                    ops.remove(i);
+                } else {
+                    i++;
                 }
             }
         }
-        return Math.abs(number.get(0));
+
+        long result = Math.abs(nums.get(0));
+        max = Math.max(max, result);
+        return result;
+    }
+    
+    public long operate(long a, long b, String op) {
+        switch (op) {
+            case "+": return a + b;
+            case "-": return a - b;
+            case "*": return a * b;
+        }
+        return 0;
     }
 }
-
