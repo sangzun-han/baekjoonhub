@@ -2,66 +2,64 @@ import java.util.*;
 
 class Solution {
     public String solution(String p) {
+        String answer = recursive(p);
+        return answer;
+    }
+
+    public String recursive(String p) {
+
+        if(p.equals("")) return "";
+        String ans = "";
         
-        if(p.length() == 0) return "";
         int check = 0;
-        int index = 0;
-        String u;
-        String v;
+        String u = "";
+        String v = "";
         
         for(int i=0; i<p.length(); i++) {
-            if(p.charAt(i)=='(') check++;
-            else if(p.charAt(i)==')') check--;
-            index++;
+            char c = p.charAt(i);
+            if(c=='(') check++;
+            else if (c==')') check--;
+            
+            // 균형 잡힌 문자열 i까지 도달했을 때, u,v로 나눈다.
             if(check==0) {
-                u = p.substring(0, index);
-                v = p.substring(index);
-                // u는 올바른 괄호 문자열인가?
-                if(isValid(u)) {
-                    return u + solution(v);
-                } else {
-                    StringBuilder sb = new StringBuilder();
-                    // 4-1
-                    sb.append("(");
-                    // 4-2
-                    sb.append(solution(v));
-                    // 4-3
-                    sb.append(")");
-                    // 4-4-1
-                    u = u.substring(1, u.length() - 1);
-                    // 4-4-2
-                    sb.append(reverse(u));
-
-                    return sb.toString();
-                }
-            }
-                    
+                u = p.substring(0, i+1);
+                v = p.substring(i+1);
+                break;
+            }   
         }
         
-        String answer = "";
-        return answer;
+        // u가 올바른 괄호 문자열이라면?
+        if(isValid(u)) {
+            return u + recursive(v);
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(");
+            sb.append(recursive(v));
+            sb.append(")");
+            u = u.substring(1, u.length() - 1);
+            StringBuilder temp = new StringBuilder();
+            for (int j = 0; j < u.length(); j++) {
+                char ch = u.charAt(j);
+                if (ch == '(') temp.append(')');
+                else temp.append('(');
+            }
+            sb.append(temp.toString());
+            return sb.toString();
+        }
     }
     
     public boolean isValid(String u) {
-        int check = 0;
-        
-        for(int i=0; i<u.length(); i++) {
-            if(check==-1) return false;
-            if(u.charAt(i)=='(') check++;
-            else if (u.charAt(i)==')') check--;
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < u.length(); i++) {
+            char c = u.charAt(i);
+            if (c == '(') {
+                stack.push(c);
+            } else {
+                if (stack.isEmpty()) return false;
+                stack.pop();
+            }
         }
-        
-        return (check < 0 || check > 0) ? false : true;
-    }
-    
-    public String reverse(String s) {
-        StringBuilder sb = new StringBuilder();
-        
-        for(int i=0; i<s.length(); i++) {
-            if(s.charAt(i)==')') sb.append("(");
-            else if (s.charAt(i)=='(') sb.append(")");
-        }
-        
-        return sb.toString();
-    }
+        return stack.isEmpty(); 
+    }   
+
 }
