@@ -1,46 +1,41 @@
-import java.util.*;
-
 class Solution {
+
     public int solution(int[] diffs, int[] times, long limit) {
-        int answer = 0;
         int left = 1;
-        int right = maxDiffs(diffs);
-       
+        int right = 100000;
+        int answer = Integer.MAX_VALUE;
+
         while(left <= right) {
-            int level = (left+right) / 2;
-            if(canLimit(diffs, times, limit, level)) {
-                right = level - 1;
-                answer = level;
-            } else {
+            int level = (left + right) / 2;
+            long totalTime = puzzle_game(diffs, times, level);
+        
+            if(totalTime > limit){
                 left = level + 1;
             }
+            else {
+                answer = level;
+                right = level - 1;
+            }
         }
+        
+    
+        
         return answer;
     }
     
-    public int maxDiffs(int[] diffs) {
-        int max = Integer.MIN_VALUE;
-        for(int i=0; i<diffs.length; i++) {
-            max = Math.max(max, diffs[i]);
-        }
-        
-        return max;
-    }
-    
-    public boolean canLimit(int[] diffs, int[] times, long limit, int level) {        
-        long currentTime = 0;
+    public long puzzle_game(int[] diffs, int[] times, int level) {
+        long totalTime = 0;
         for(int i=0; i<diffs.length; i++) {
             int diff = diffs[i];
-            int time = times[i];
             
-            if(diff <= level) currentTime += time;
-            else {
-                int count = diff - level;
-                currentTime += (time + times[i-1]) * count + time;
+            if(diff <= level) {
+                totalTime += times[i];
+            } else {
+                int count = (diff - level);
+                totalTime += (times[i-1] + times[i]) * count + times[i];
             }
         }
-        if(limit >= currentTime) return true;
         
-        return false;
+        return totalTime;
     }
 }
