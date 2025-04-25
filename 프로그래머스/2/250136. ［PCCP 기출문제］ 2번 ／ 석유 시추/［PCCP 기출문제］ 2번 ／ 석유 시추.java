@@ -12,8 +12,8 @@ class Point {
 
 class Solution {
     static int n,m;
-    static int[] dr = {-1,0,1,0};
-    static int[] dc = {0,1,0,-1};
+    static int[] dr = {0,1,0,-1};
+    static int[] dc = {1,0,-1,0};
     static Map<Integer, Integer> map = new HashMap<>();
     
     public int solution(int[][] land) {
@@ -52,7 +52,7 @@ class Solution {
                 int nc = p.c + dc[d];
                 
                 if(nr>=0 && nr<n && nc>=0 && nc<m && land[nr][nc]==1) {
-                    queue.offer(new Point(nr,nc));    
+                    queue.offer(new Point(nr,nc));
                     land[nr][nc] = 0;
                     count++;
                 }
@@ -62,6 +62,8 @@ class Solution {
         for(int col: set) {
             map.put(col, map.getOrDefault(col, 0) + count);
         }
+        
+        set.clear();
         return;
     }
 }
