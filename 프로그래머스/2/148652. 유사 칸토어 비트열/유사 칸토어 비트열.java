@@ -3,15 +3,16 @@ class Solution {
         int answer = 0;
         
         for(long i=l-1; i<r; i++) {
-            if(isKantoa(i)) answer++;
+            if(recursive(i)) answer++;
         }
         return answer;
     }
     
-    public boolean isKantoa(long x) {
-        if(x < 5 && x != 2) return true;
-        if(x % 5 == 2) return false;
+    public boolean recursive(long n) {
+        if(n==0) return true;
+        if(n%5==2) return false;
         
-        return isKantoa(x/5);
+        return recursive(n/5);
+      
     }
 }
