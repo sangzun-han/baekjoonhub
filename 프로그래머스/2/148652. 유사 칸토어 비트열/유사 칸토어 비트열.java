@@ -2,17 +2,17 @@ class Solution {
     public int solution(int n, long l, long r) {
         int answer = 0;
         
-        for(long i=l-1; i<r; i++) {
-            if(recursive(i)) answer++;
+        for(long num=l-1; num<r; num++) {
+            if(recursive(num)) answer++;
         }
         return answer;
     }
     
-    public boolean recursive(long n) {
-        if(n==0) return true;
-        if(n%5==2) return false;
-        
-        return recursive(n/5);
-      
+    public boolean recursive(long num) {
+        if(num%5==2) return false;
+        if(num/5 ==0) return true;
+    
+        return recursive(num/5);
     }
 }
+
