@@ -1,73 +1,78 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
+// 우상, 우, 우하, 하 ,좌하, 좌, 좌상, 상
 class Solution {
+    static int[] dr = {-1, 0, 1, 2, 1, 0, -1, 2};
+    static int[] dc = {1, 2, 1, 0, -1, -2, -1, 0};
+    
+    public int[] solution(String[][] places) {
+        int[] answer = new int[5];
+        
+        for(int i=0; i<places.length; i++) {
+            char[][] room = new char[5][5];
 
-    int[] dx = new int[]{-1,0,1,0};
-    int[] dy = new int[]{0,1,0,-1};
-
-    class node{
-        int x;
-        int y;
-        int dist;
-        node(int a,int b, int c){
-            this.x = a;
-            this.y = b;
-            this.dist = c;
+            for(int j=0; j<places[0].length; j++) {
+                room[j] = places[i][j].toCharArray();
+            }
+            
+            if(check(room)) {
+                answer[i] = 1;
+            } else {
+                answer[i] = 0;
+            }
         }
+        
+        
+        return answer;
     }
-
-    int bfs(char[][] map){
-
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                if(map[i][j] != 'P') continue;
-                boolean[][] check = new boolean[5][5];
-                Queue<node> q = new LinkedList<>();
-                q.add(new node(i,j,0));
-                check[i][j] = true;
-
-                while(!q.isEmpty()){
-                    node cur = q.poll();
-
-                    for (int dir = 0; dir < 4; dir++) {
-                        int nx = cur.x + dx[dir];
-                        int ny = cur.y + dy[dir];
-                        int ndist = cur.dist + 1;
-
-                        if(ndist > 2) continue;
-                        if(nx < 0 || nx > 4 || ny < 0 || ny > 4) continue;
-                        if(check[nx][ny]) continue;
-
-                        if(map[nx][ny] == 'P') return 0;
-                        if(map[nx][ny] == 'O'){
-                            check[nx][ny] = true;
-                            q.add(new node(nx,ny,ndist));
-                        }
+    
+    public boolean check(char[][] room) {
+        for(int i=0; i<room.length; i++) {
+            for(int j=0; j<room[i].length; j++) {
+                if(room[i][j]=='P') {
+                
+                    if(!getDistance(room, i,j)) return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    public boolean getDistance(char[][] room, int r, int c) {
+        int[] ddr = {-1,0,1,0};
+        int[] ddc = {0,1,0,-1};
+        
+        for(int d=0; d<4; d++) {
+            int nr = r + ddr[d];
+            int nc = c + ddc[d];
+            
+            if(nr>=0 && nr<5 && nc>=0 && nc<5) {
+                if(room[nr][nc]=='P') return false;
+            }
+        }
+        
+        for(int d=0; d<8; d++) {
+            int nr = r + dr[d];
+            int nc = c + dc[d];
+            
+            if(nr>=0 && nr<5 && nc>=0 && nc<5) {
+                if(room[nr][nc]=='P') {
+                    
+                    if(d%2==0) {
+                        int tempR = nr - dr[d]/2;
+                        int tempC = nc - dc[d]/2;
+                        if(room[r][tempC] !='X' || room[tempR][c] != 'X') return false;
+                    }
+                    else {
+                        int tempR = nr - dr[d]/2;
+                        int tempC = nc - dc[d]/2;
+                        if(room[tempR][tempC] != 'X' ) return false;
                     }
                 }
             }
         }
-        return 1;
-    }
-
-    public int[] solution(String[][] places) {
-        int[] answer = new int[places.length];
-
-        for (int x = 0; x < places.length; x++) {
-            String[] place = places[x];
-            char[][] map = new char[5][5];
-
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 5; j++) {
-                    map[i][j] = place[i].charAt(j);
-                }
-            }
-
-            answer[x] = bfs(map);
-        }
-
-        return answer;
+                       
+        return true;
     }
 }
