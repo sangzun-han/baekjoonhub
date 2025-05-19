@@ -12,7 +12,7 @@ class Position {
 }
 
 public class Main {
-    static int[] dist = {2,1,-1};
+    static int[] dist = {2,-1,1};
     
     public static void main(String[] args) throws Exception{
         Queue<Position> queue = new ArrayDeque<>();
