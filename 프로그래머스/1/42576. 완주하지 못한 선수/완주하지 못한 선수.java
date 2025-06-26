@@ -1,24 +1,28 @@
 import java.util.*;
 
 class Solution {
-    public String solution(String[] participant, String[] completion) {
+    public String solution(String[] participant, String[] completion) {        
         String answer = "";
-        HashMap<String, Integer> hash = new HashMap<>();
         
-        for(int i=0; i<participant.length; i++) {
-            hash.put(participant[i], hash.getOrDefault(participant[i],0)+1);
-        }
+        Map<String, Integer> 완주한사람 = new HashMap<>();
         
         for(int i=0; i<completion.length; i++) {
-            hash.put(completion[i], hash.getOrDefault(completion[i],0)-1);
+            String completed = completion[i];  
+            완주한사람.put(completed, 완주한사람.getOrDefault(completed, 0) + 1);
         }
         
-        for(String s: hash.keySet()) {
-            if(hash.get(s)>0) {
-                answer = s;
-            }
+        for(int i=0; i<participant.length; i++) {
+            String p = participant[i];
+            int count = 완주한사람.getOrDefault(p, 0) - 1;
+            완주한사람.put(p, count);
+        }
+        
+        for(String key: 완주한사람.keySet()) {
+            int value = 완주한사람.get(key);
+            if(value < 0) answer = key;
         }
         
         return answer;
     }
 }
+
