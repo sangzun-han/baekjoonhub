@@ -1,7 +1,6 @@
 import java.util.*;
 
-class Solution {
-    public class Node {
+class Node {
     String word;
     int level;
     
@@ -10,21 +9,18 @@ class Solution {
         this.level = level;
     }
 }
-    
+
+class Solution {
     public int solution(String begin, String target, String[] words) {
+
         Queue<Node> queue = new ArrayDeque<>();
-        boolean[] visited = new boolean[words.length];
         queue.offer(new Node(begin, 0));
-        
+        boolean[] visited = new boolean[words.length];
         
         while(!queue.isEmpty()) {
-            Node cur = queue.poll();
-            String curWord = cur.word;
-            int curLevel = cur.level;
+            Node node = queue.poll();
             
-            if(curWord.equals(target)) {
-                return curLevel;
-            }
+            if(node.word.equals(target)) return node.level;
             
             for(int i=0; i<words.length; i++) {
                 String word = words[i];
@@ -33,20 +29,18 @@ class Solution {
                 
                 int count = 0;
                 for(int j=0; j<word.length(); j++) {
-                    if(curWord.charAt(j) == word.charAt(j)) {
+                    if(word.charAt(j) == node.word.charAt(j)) {
                         count++;
                     }
                 }
                 
-                if(count == word.length()-1) {
+                if(count==word.length()-1) {
+                    queue.offer(new Node(word, node.level+1));
                     visited[i] = true;
-                    queue.offer(new Node(word, curLevel+1));
                 }
             }
         }
         
         return 0;
-        
- 
     }
 }
