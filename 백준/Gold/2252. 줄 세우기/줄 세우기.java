@@ -10,7 +10,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
         
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        Queue<Integer> queue = new ArrayDeque<>();
         
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
@@ -32,16 +32,16 @@ public class Main {
         }
         
         for(int i=1; i<=N; i++) {
-            if(indegree[i]==0) pq.offer(i);
+            if(indegree[i]==0) queue.offer(i);
         }
         
-        while(!pq.isEmpty()) {
-            int node = pq.poll();
+        while(!queue.isEmpty()) {
+            int node = queue.poll();
             sb.append(node).append(" ");
             
             for(int next: graph[node]) {
                 indegree[next]--;
-                if(indegree[next]==0) pq.offer(next);
+                if(indegree[next]==0) queue.offer(next);
             }
         }
         System.out.println(sb);
